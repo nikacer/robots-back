@@ -1,4 +1,8 @@
 const seguridad = require('../services/seguridad')
+const pokemon = require('../models/pokemon.model')
+const uuid = require('uuid');
+const mysqlService = require("../services/db")
+const mysql = new mysqlService();
 
 const listar = (req, res) => {
     return res.status(200).send('listado')
@@ -12,8 +16,32 @@ const verificarToken = (req, res) => {
     return res.status(200).send('ok')
 }
 
+const agregarpokemon = (req, res) => {
+    const {nombre, peso, familia} = req.body
+    const schemaPokemon = new pokemon({nombre,peso,familia, uuid: uuid.v4()})
+    schemaPokemon.save(err =>{
+        if(err) return res.status(500).send({err: ' algo fallo: ' + err})
+        return res.status(200).send({ok:true})
+    })
+}
+
+const listarPokemones = (req,res)=>{
+    pokemon.find({},(err, pokemones)=>{
+        if(err) return res.status(500).send({err: ' algo fallo: ' + err})
+        return res.status(200).send({pokemones: pokemones.map(({nombre,uuid,peso,familia}) =>({nombre,uuid,peso,familia}))})
+    })
+}
+
+const listarPokemonesDos = (req,res)=>{
+   mysql.consultar('select * from pokemones')
+   return res.status(200).send({ok:true})
+}
+
 module.exports = {
     listar,
     nuevoToken,
-    verificarToken
+    verificarToken,
+    agregarpokemon,
+    listarPokemones,
+    listarPokemonesDos
 }
