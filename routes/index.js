@@ -10,6 +10,8 @@ api.post('/prueba-token', auth, pokemonesController.verificarToken)
 api.post('/agregar', pokemonesController.agregarpokemon)
 api.get('/obtener', pokemonesController.listarPokemones)
 api.get('/obtener-dos', pokemonesController.listarPokemonesDos)
+api.get('/sequelize', pokemonesController.sequelize)
+api.get('/pdf', pokemonesController.retornoPDF)
 
 
 module.exports = api
