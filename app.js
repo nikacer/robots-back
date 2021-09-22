@@ -9,4 +9,5 @@ app.use(express.json())
 
 app.use('/pokemon', cors(reglas), pokemonesRoutes)
 
+
 module.exports = app;
