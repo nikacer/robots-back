@@ -1,2 +1,6 @@
 node_modules
 .env
+noticias
+file
+.vscode
+coverage
