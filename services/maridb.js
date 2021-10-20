@@ -1,43 +1,42 @@
-const mariadb = require('mariadb');
-const  mysql= require('mysql2');
-const { Sequelize} = require('sequelize');
+const mysql = require('mysql2');
+const { Sequelize } = require('sequelize')
 
-// conn.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
+module.exports = class MysqlClass {
 
+  config = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "test"
+  })
 
-class MariaDB {
-
-    constructor(){
-      if(typeof MariaDB.intance === 'object'){
-        return MariaDB.intance;
-      }
-
-      this._crearSequelize()
-      MariaDB.intance = this
-      return this
-      
+  constructor() {
+    if (typeof MysqlClass.instace == "object") {
+      return MysqlClass.instace
     }
 
-    _crearSequelize(){
-      const [servidor, usuario, password, baseDatos] = process.env.MYSQL.split(',')
-      
-      this.sequelize = new Sequelize(
-        baseDatos,usuario, password, {
-          host: servidor,
-          dialect: 'mysql'
-        })
-    }
+    this._crearSequelize();
+    MysqlClass.instace = this
+    return this;
+  }
 
-    async _autenticar(){
-      try{
-        const response = await this.sequelize.authenticate()
-        console.log("base de datos relaicional conectada")
-      }catch(err){
-        console.error("error conexion bd relacional",err)
-        throw err;
-      }
-    }
+  _crearSequelize() {
+    const [host, usuario, password, basedatos] = process.env.MYSQL.split(',')
+    this.sequelize = new Sequelize(basedatos, usuario, password, {
+      host,
+      dialect: 'mariadb',
+      dialectOptions: { connectTimeout: 1000 }
+    })
 
-    }
+  }
 
-    module.exports = MariaDB
+  async _autenticar() {
+    try {
+      const response = await this.sequelize.authenticate()
+      console.log(" base de datos relacional conectada ", response)
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
+}
